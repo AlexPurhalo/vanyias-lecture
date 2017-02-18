@@ -1,21 +1,19 @@
 'use strict';
 
-const http = require('http');
-const staticServer = require('node-static');
-const file = new staticServer.Server('.');
 var data = require('./data.js');
+const express = require('express');
 
-http.createServer(function(req, res) {
-    if (req.url == '/photos') {
-        res.writeHead(200, {
-            'Content-Type': 'text/plain',
-            'Cache-Control': 'no-cache'
-        });
+const  app = express();
 
-        res.end(JSON.stringify(data.photos))
-    } else {
-        file.serve(req, res);
-    }
-}).listen(3000);
+app.use(express.static(__dirname));
+app.listen(3000);
+
+app.get('/', function(request, response) {
+    response.sendFile(__dirname + '/index.html')
+});
+
+app.get('/photos', function(request, response) {
+   response.send(JSON.stringify((data.photos)))
+});
 
 console.log('Server running on port 3000');
