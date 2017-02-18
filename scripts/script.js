@@ -5,6 +5,7 @@ const avatar = document.querySelector('.avatar');
 const phone = document.querySelector('.phone');
 const email = document.querySelector('.email');
 const name = document.querySelector('.name');
+const friendsList = document.getElementById('friends');
 
 
 xhr.onreadystatechange  = () => {
@@ -22,15 +23,38 @@ xhr.onreadystatechange  = () => {
             gallery.appendChild(photo);
         });
 
+        xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = () => {
             if (xhr.status == 200 & xhr.readyState == 4) {
                 let profile = JSON.parse(xhr.responseText).results[0];
-                console.log(profile);
                 avatar.src = profile.picture['large'];
                 phone.textContent = profile.phone;
                 name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
                 email.textContent = profile.email
+
+                xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = () => {
+                    if(xhr.status == 200 & xhr.readyState == 4) {
+                        let friends = JSON.parse(xhr.responseText).results;
+                        console.log(friends)
+
+                        friends.map(friend => {
+                            let friendPhoto = document.createElement('div'),
+                                img = document.createElement('img');
+
+                            friendPhoto.classList.add('friendPhoto');
+                            img.src = friend.picture['large'];
+
+                            friendPhoto.appendChild(img);
+                            friendsList.appendChild(friendPhoto)
+                        })
+                    }
+                };
+
+                xhr.open('GET', 'https://randomuser.me/api/?results=15', true)
+                xhr.send(null)
             }
         };
 
