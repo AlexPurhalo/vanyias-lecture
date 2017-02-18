@@ -12,7 +12,7 @@ http.createServer(function(req, res) {
             'Cache-Control': 'no-cache'
         });
 
-        res.end(JSON.stringify(data))
+        res.end(JSON.stringify(data.photos))
     } else {
         file.serve(req, res);
     }
