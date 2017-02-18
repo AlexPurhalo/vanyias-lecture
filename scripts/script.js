@@ -9,10 +9,14 @@ const button = document.querySelector('button');
 const input = document.querySelector('input');
 const replies = document.querySelector('.replies');
 
-button.addEventListener('click', (e) => {
-    alert('Clicked')
+button.addEventListener('click', () => {
+    let text = input.value.trim();
+    let reply = document.createElement('p');
+    reply.classList.add('reply');
+    reply.innerHTML = `<p>${text}</p>`;
+    replies.appendChild(reply);
+    input.value = null;
 });
-
 
 function get(url) {
     let xhr = new XMLHttpRequest();
@@ -72,9 +76,6 @@ xhr.onreadystatechange  = () => {
                             friendsList.appendChild(friendPhoto)
                         })
                     }
-                    button.addEventListener('click', (e) => {
-                        alert('Clicked')
-                    });
                 };
 
                 xhr.open('GET', 'https://randomuser.me/api/?results=15', true)
