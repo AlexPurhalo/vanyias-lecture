@@ -2,7 +2,7 @@ var response;
 var xhr = new XMLHttpRequest();
 
 const gallery = document.getElementById('gallery');
-xhr.onreadystatechange = function(e) {
+xhr.onreadystatechange = function() {
     if (xhr.status == 200 & xhr.readyState == 4) {
         var photos = JSON.parse(xhr.responseText);
 
@@ -16,6 +16,17 @@ xhr.onreadystatechange = function(e) {
             photo.appendChild(img);
             gallery.appendChild(photo);
         }
+
+        xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange  = function() {
+            if (xhr.status == 200 & xhr.readyState == 4) {
+                console.log(xhr.responseText)
+            }
+        };
+
+        xhr.open('PUT', 'https://randomuser.me/api/', true)
+        xhr.send(null)
     }
 };
 
