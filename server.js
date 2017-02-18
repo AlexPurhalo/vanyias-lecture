@@ -3,15 +3,16 @@
 const http = require('http');
 const staticServer = require('node-static');
 const file = new staticServer.Server('.');
+var data = require('./data.js');
 
 http.createServer(function(req, res) {
-    if (req.url == '/hello') {
+    if (req.url == '/photos') {
         res.writeHead(200, {
             'Content-Type': 'text/plain',
             'Cache-Control': 'no-cache'
         });
 
-        res.end('Hi!')
+        res.end(JSON.stringify(data))
     } else {
         file.serve(req, res);
     }
