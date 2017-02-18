@@ -1,7 +1,11 @@
-let response;
 let xhr = new XMLHttpRequest();
 
 const gallery = document.getElementById('gallery');
+const avatar = document.querySelector('.avatar');
+const phone = document.querySelector('.phone');
+const email = document.querySelector('.email');
+const name = document.querySelector('.name');
+
 
 xhr.onreadystatechange  = () => {
     if (xhr.status == 200 & xhr.readyState == 4) {
@@ -18,9 +22,19 @@ xhr.onreadystatechange  = () => {
             gallery.appendChild(photo);
         });
 
-        xhr = new XMLHttpRequest();
 
-        xhr.open('PUT', 'https://randomuser.me/api/', true);
+        xhr.onreadystatechange = () => {
+            if (xhr.status == 200 & xhr.readyState == 4) {
+                let profile = JSON.parse(xhr.responseText).results[0];
+                console.log(profile);
+                avatar.src = profile.picture['large'];
+                phone.textContent = profile.phone;
+                name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
+                email.textContent = profile.email
+            }
+        };
+
+        xhr.open('GET', 'https://randomuser.me/api/', true);
         xhr.send(null)
     }
 };
