@@ -9,14 +9,20 @@ const button = document.querySelector('button');
 const input = document.querySelector('input');
 const replies = document.querySelector('.replies');
 
-button.addEventListener('click', () => {
+
+button.addEventListener('click', addReply)
+input.addEventListener('keydown', (e) => {
+    if (e.which == 13) addReply();
+});
+
+function addReply() {
     let text = input.value.trim();
     let reply = document.createElement('p');
     reply.classList.add('reply');
     reply.innerHTML = `<p>${text}</p>`;
     replies.appendChild(reply);
     input.value = null;
-});
+}
 
 function get(url) {
     let xhr = new XMLHttpRequest();
