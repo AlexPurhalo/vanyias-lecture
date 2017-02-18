@@ -1,31 +1,26 @@
-var response;
-var xhr = new XMLHttpRequest();
+let response;
+let xhr = new XMLHttpRequest();
 
 const gallery = document.getElementById('gallery');
-xhr.onreadystatechange = function() {
-    if (xhr.status == 200 & xhr.readyState == 4) {
-        var photos = JSON.parse(xhr.responseText);
 
-        for (var i =0; i < photos.length; i++) {
-            var photo = document.createElement('div'),
+xhr.onreadystatechange  = () => {
+    if (xhr.status == 200 & xhr.readyState == 4) {
+        let photos = JSON.parse(xhr.responseText);
+
+        photos.map(item => {
+            let photo = document.createElement('div'),
                 img = document.createElement('img');
 
             photo.classList.add('photo');
-            img.src = photos[i].url;
+            img.src = item.url;
 
             photo.appendChild(img);
             gallery.appendChild(photo);
-        }
+        });
 
         xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange  = function() {
-            if (xhr.status == 200 & xhr.readyState == 4) {
-                console.log(xhr.responseText)
-            }
-        };
-
-        xhr.open('PUT', 'https://randomuser.me/api/', true)
+        xhr.open('PUT', 'https://randomuser.me/api/', true);
         xhr.send(null)
     }
 };
