@@ -11,6 +11,7 @@ const replies = document.querySelector('.replies');
 
 
 button.addEventListener('click', addReply)
+
 input.addEventListener('keydown', (e) => {
     if (e.which == 13) addReply();
 });
@@ -24,12 +25,12 @@ function addReply() {
     input.value = null;
 }
 
-function get(url) {
+function get(url, callback) {
     let xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {
         if (xhr.status == 200 & xhr.readyState == 4) {
-
+            callback(JSON.parse(xhr.responseText))
         }
     };
 
@@ -37,62 +38,17 @@ function get(url) {
     xhr.send(null);
 }
 
-get('/photos');
+get('/photos', drawPhotos);
 
-xhr.onreadystatechange  = () => {
-    if (xhr.status == 200 & xhr.readyState == 4) {
-        let photos = JSON.parse(xhr.responseText);
+function drawPhotos(photos) {
+    photos.map(item => {
+        let photo = document.createElement('div'),
+            img = document.createElement('img');
 
-        photos.map(item => {
-            let photo = document.createElement('div'),
-                img = document.createElement('img');
+        photo.classList.add('photo');
+        img.src = item.url;
 
-            photo.classList.add('photo');
-            img.src = item.url;
-
-            photo.appendChild(img);
-            gallery.appendChild(photo);
-        });
-
-        xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = () => {
-            if (xhr.status == 200 & xhr.readyState == 4) {
-                let profile = JSON.parse(xhr.responseText).results[0];
-                avatar.src = profile.picture['large'];
-                phone.textContent = profile.phone;
-                name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
-                email.textContent = profile.email
-
-                xhr = new XMLHttpRequest();
-
-                xhr.onreadystatechange = () => {
-                    if(xhr.status == 200 & xhr.readyState == 4) {
-                        let friends = JSON.parse(xhr.responseText).results;
-                        console.log(friends)
-
-                        friends.map(friend => {
-                            let friendPhoto = document.createElement('div'),
-                                img = document.createElement('img');
-
-                            friendPhoto.classList.add('friendPhoto');
-                            img.src = friend.picture['large'];
-
-                            friendPhoto.appendChild(img);
-                            friendsList.appendChild(friendPhoto)
-                        })
-                    }
-                };
-
-                xhr.open('GET', 'https://randomuser.me/api/?results=15', true)
-                xhr.send(null)
-            }
-        };
-
-        xhr.open('GET', 'https://randomuser.me/api/', true);
-        xhr.send(null)
-    }
-};
-
-xhr.open('GET', '/photos', true);
-xhr.send(null);
+        photo.appendChild(img);
+        gallery.appendChild(photo);
+    });
+}
