@@ -23,8 +23,16 @@ photoInput.addEventListener('change', (e) => {
     uploadPhoto(file);
 });
 
-function uploadPhoto(file) {
-    console.log(file)
+function uploadPhoto(photo) {
+    let container = {
+        url: '/photos', resolve: onSuccess, reject: onError, data: photo
+    };
+
+    function onSuccess(response) {
+        console.log(response);
+    }
+
+    post(container)
 }
 
 // Markup elements
@@ -53,10 +61,27 @@ function get(url, callback, onError) {
         (xhr.status == 200 && xhr.readyState == 4) && callback(JSON.parse(xhr.responseText))
     };
 
-
     xhr.onerror  = onError;
     xhr.open('GET', url, true);
     xhr.send(null);
+}
+
+function post(params) {
+    const xhr = new XMLHttpRequest();
+
+    let formData = new FormData();
+    formData.append('file', params.data);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.status == 200 && xhr.readyState == 4) {
+            params.resolve(JSON.parse(xhr.responseText));
+        }
+    };
+
+    xhr.onerror = params.reject;
+
+    xhr.open('POST', params.url, true);
+    xhr.send(formData);
 }
 
 // Elements rendering
