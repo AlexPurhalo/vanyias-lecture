@@ -7,7 +7,7 @@ const gallery = document.getElementById('gallery'),
     friendsList = document.getElementById('friends'),
     button = document.querySelector('button'),
     input = document.querySelector('input'),
-    replies = document.querySelector('.replies')
+    replies = document.querySelector('.replies');
 
 // Markup elements
 button.addEventListener('click', addReply);
@@ -23,14 +23,20 @@ function addReply() {
     input.value = null;
 }
 
+// Callback function for errors messages handling
+function onError(e) { throw new Error(e.message) }
+
+
 // Callback function
-function get(url, callback) {
+function get(url, callback, onError) {
     let xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {
         (xhr.status == 200 && xhr.readyState == 4) && callback(JSON.parse(xhr.responseText))
     };
 
+
+    xhr.onerror  = onError;
     xhr.open('GET', url, true);
     xhr.send(null);
 }
@@ -48,7 +54,7 @@ function drawPhotos(photos) {
         gallery.appendChild(photo);
     });
 }
-get('/photos', drawPhotos);
+get('/photos', drawPhotos, onError);
 
 function showProfile(profile) {
     profile = profile['results'][0];
@@ -57,7 +63,7 @@ function showProfile(profile) {
     name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
     email.textContent = profile.email
 }
-get('https://randomuser.me/api', showProfile);
+get('https://randomuse.me/api', showProfile, onError);
 
 
 function showFriendsList(friends) {
@@ -72,4 +78,4 @@ function showFriendsList(friends) {
         friendsList.appendChild(friendPhoto)
     })
 }
-get('https://randomuser.me/api/?results=15', showFriendsList);
+get('https://randomuser.me/api/?results=15', showFriendsList, onError);
