@@ -53,18 +53,26 @@ function addReply() {
 function onError(e) { throw new Error(e.message) }
 
 
-// Callback function
-function get(url, callback, onError) {
-    let xhr = new XMLHttpRequest();
+// Promise function
+function get(url) {
+    return new Promise(function(resolve, reject) {
+        const xhr= new XMLHttpRequest();
 
-    xhr.onreadystatechange = () => {
-        (xhr.status == 200 && xhr.readyState == 4) && callback(JSON.parse(xhr.responseText))
-    };
+        xhr.onreadystatechange = () => {
+            (xhr.status == 200 && xhr.readyState == 4) && resolve(JSON.parse(xhr.responseText))
+        };
 
-    xhr.onerror  = onError;
-    xhr.open('GET', url, true);
-    xhr.send(null);
+        xhr.onerror = reject;
+        xhr.open('GET', url, true);
+        xhr.send(null);
+    })
 }
+
+const getPhotos = () => get('/photos').then(drawPhotos);
+const getProfile = () => get('https://randomuser.me/api').then(showProfile);
+const getFriends = () => get('https://randomuser.me/api/?results=15').then(showFriendsList);
+
+getPhotos().then(getProfile).then(getFriends);
 
 function post(params) {
     const xhr = new XMLHttpRequest();
@@ -97,7 +105,6 @@ function drawPhotos(photos) {
         gallery.appendChild(photo);
     });
 }
-get('/photos', drawPhotos, onError);
 
 function showProfile(profile) {
     profile = profile['results'][0];
@@ -106,7 +113,6 @@ function showProfile(profile) {
     name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
     email.textContent = profile.email
 }
-get('https://randomuser.me/api', showProfile, onError);
 
 
 function showFriendsList(friends) {
@@ -121,4 +127,3 @@ function showFriendsList(friends) {
         friendsList.appendChild(friendPhoto)
     })
 }
-get('https://randomuser.me/api/?results=15', showFriendsList, onError);
