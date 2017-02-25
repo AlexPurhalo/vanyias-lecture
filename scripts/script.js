@@ -9,6 +9,11 @@ const gallery = document.getElementById('gallery'),
     input = document.querySelector('input'),
     replies = document.querySelector('.replies');
 
+const photoInput = document.getElementById('photo-input');
+photoInput.addEventListener('change', (e) => {
+    console.log(e)
+});
+
 // Markup elements
 button.addEventListener('click', addReply);
 
