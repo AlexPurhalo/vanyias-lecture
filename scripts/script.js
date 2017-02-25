@@ -10,9 +10,22 @@ const gallery = document.getElementById('gallery'),
     replies = document.querySelector('.replies');
 
 const photoInput = document.getElementById('photo-input');
+
 photoInput.addEventListener('change', (e) => {
-    console.log(e)
+    let file = e.target.files[0];
+    let types = ['image/jpeg', 'image/gif', 'image/png'];
+
+    if (!file || !types.includes(file.type)) {
+        e.target.value = null;
+        throw new TypeError('Wrong type of file'); // instead of return
+    }
+
+    uploadPhoto(file);
 });
+
+function uploadPhoto(file) {
+    console.log(file)
+}
 
 // Markup elements
 button.addEventListener('click', addReply);

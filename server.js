@@ -16,4 +16,8 @@ app.get('/photos', (request, response) => {
    response.send(JSON.stringify((data.photos)))
 });
 
+app.post('/posts', (requestAnimationFrame,  response) => {
+
+});
+
 console.log('Server running on port 8080');
