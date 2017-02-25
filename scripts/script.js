@@ -63,7 +63,7 @@ function showProfile(profile) {
     name.textContent = profile.name['first'] + ' ' +  profile.name['last'];
     email.textContent = profile.email
 }
-get('https://randomuse.me/api', showProfile, onError);
+get('https://randomuser.me/api', showProfile, onError);
 
 
 function showFriendsList(friends) {
